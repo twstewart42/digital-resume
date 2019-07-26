@@ -1,0 +1,127 @@
+
+<html>
+<link rel='stylesheet' id='site-css' href='../css/site.css' type='text/css' >
+<script src="../js/side-nav.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div class="topnav">
+  <a class="active" href="../index.html">Home</a>
+  <a href="../pages/expanded-resume.html">Resume</a>
+  <a href="./blog-index.html">Blog</a>
+  <a href="./side-projects.html">Side Projects</a>
+</div>
+<title>T.W.Stewart</title>
+<h1>T.W.Stewart</h1>
+<h2 align="right">My Digital Resume</h2>
+<hr>
+</head>
+      <body>
+        <div id='content'>
+    <h1 id="wheel-of-misfortune">Wheel Of Misfortune</h1>
+<h2 id="the-game">The Game</h2>
+<img src="../images/wom/main-logo.png" alt="main logo">
+<p>A role-playing game for incident management training</p>
+<p>The Wheel of Misfortune is best done with an on-call group but can be expanded to fit larger groups up to the entire enterprise depending on how thorough and complex you make your scenarios.</p>
+<p>My team has found that this works best as a monthly activity, and in general we get through 2 incidents in about an hour as we select an on-call agent using the random picker, spin the wheel (terrifying), work through the incidents – with team leads adding information and hints or extra challenges along the way, then a wrap up of the incident by going through a mock Root Cause Analysis/Blameless Postmortem.</p>
+<h2 id="hosted">Hosted</h2>
+<p>A live demo of this project is available to view at <a href="http://wom.twstewart.me">wom.twstewart.me</a></p>
+<p>It is hosted as a static site in an AWS S3 bucket, a walkthrough on setting up a static website using S3 is available below</p>
+
+<h2 id="testing">Testing</h2>
+<p>One can use the included Dockerfile to test and/or host a local version of the game…or just open the index.html in your favorite browser (low tech testing)</p>
+<pre><code>$ docker build -t wheel-of-misfortune-test .
+$ docker run --name wom-test -d -p 8080:80 wheel-of-misfortune-test
+</code></pre>
+<h2 id="screenshots">Screenshots</h2>
+<p>The Wheel of Misfortune Welcome page  <br />
+<img src="../images/wom/wom-1.png" alt="Demo 1" width="720" height="570" /></p>
+<p>Select an On-call Agent  <br />
+Spin the wheel and get started solving incidents  <br />
+<img src="../images/wom/wom-2.png" alt="Demo 2" width="720" height="570"/></p>
+
+
+<h2>Walkthrough: Hosting the Wheel of Misfortune</h2>
+<p>As the app/live demo is fairly basic HTML/javascript project, I found that the simplest way (and cheapest) was to configuring an AWS S3 bucket to host a live static website.</p>
+<h3>How to:</h3>
+<ol>
+<li>Create a new S3 bucket, name it the same as the domain name you wish to host &#8216;wom.twstewart.me&#8217;</li>
+<li>Use default settings for S3 bucket</li>
+<li>On the Properties tab, enable Versioning and Static Website Hosting</li>
+<li>For Static Website Hosting:
+<ol>
+<li>index document = index.html</li>
+<li>error document = index.html</li>
+<li>Save</li>
+</ol>
+</li>
+<li>On the Permission tab, turn OFF public access blocks</li>
+<li>On Bucket Policy Tab, you can restrict the IP&#8217;s allowed to connect to the website, obviously, mine is open to all public, if you wish to do the same it is recommended to restrict it to specific IPs
+<ol>
+<li style="list-style-type: none;">
+<ol>
+<li>
+<pre>{
+   "Version": "2012-10-17",
+   "Id": "S3PolicyId1",
+   "Statement": [
+   {
+     "Sid": "IPAllow",
+     "Effect": "Allow",
+     "Principal": "*",
+     "Action": "s3:GetObject",
+     "Resource": "arn:aws:s3:::wom.twstewart.me/*",
+     "Condition": {
+          "IpAddress": {
+          "aws:SourceIp": "0.0.0.0/0"
+          }
+     }
+  }
+  ]
+}</pre>
+</li>
+</ol>
+</li>
+</ol>
+<ol>
+<li>On CORS tab, enable this policy to allow systems to read the indicent_response.json
+<ol>
+<li>
+<pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"&gt;
+&lt;CORSRule&gt;
+&lt;AllowedOrigin&gt;*&lt;/AllowedOrigin&gt;
+&lt;AllowedMethod&gt;GET&lt;/AllowedMethod&gt;
+&lt;AllowedHeader&gt;*&lt;/AllowedHeader&gt;
+&lt;/CORSRule&gt;
+&lt;/CORSConfiguration&gt;</pre>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>Upload site files to the S3 bucket</li>
+<li>See if you can hit the static website URL, and if perms are correct all assets should load</li>
+<li>Then if you want to set up an easy name to go to the s3 bucket URL, on your DNS system, create a CNAME redirect like:
+<ol>
+<li>CNAME wom.twstewart.me wom.twstewart.me.s3-website-us-east-1.amazonaws.com</li>
+</ol>
+</li>
+<li>Congratulations! You have an awesome website hosting in AWS on an S3 bucket.</li>
+</ol>
+
+<h1 id="credits">Credits</h1>
+<p>The concept of a Wheel of Misfortune comes from the Google's <a href="https://landing.google.com/sre/sre-book/chapters/accelerating-sre-on-call/#xref_training_disaster-rpg">Site Reliability Engineer ebook</a>, and the tool was originally created by <a href="https://github.com/dastergon/wheel-of-misfortune">dastergon</a> and then I forked and expanded to fit my team’s needs, added ‘dark mode’ and a random on-call agent selector at <a href="https://github.com/twstewart42/wheel-of-misfortune">My Github</a></p>
+
+        </div>
+        <style type='text/css'>undefined</style>
+      </body>
+<footer align="center">
+<hr>
+<p>Created by: Tom Stewart, 2019</p>
+<p>MIT Liscense, code available on my Github</p>
+<p>Site design inspired by <a href="http://bettermotherfuckingwebsite.com/">http://bettermotherfuckingwebsite.com/</a></p>
+</footer>
+
+    </html>
