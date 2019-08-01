@@ -1,0 +1,74 @@
+<html>
+<link rel='stylesheet' id='site-css' href='../css/site.css' type='text/css' >
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Tom Stewart">
+<meta name="description" content="New Website for Tom Stewart">
+<div class="topnav">
+  <a class="active" href="../index.html">Home</a>
+  <a href="./expanded-resume.html">Resume</a>
+  <a href="./blog-index.html">Blog</a>
+  <a href="./side-projects.html">Side Projects</a>
+</div>
+<title>T.W.Stewart</title>
+<h1>T.W.Stewart</h1>
+<h2 align="right">My Digital Resume</h2>
+<hr>
+</head>
+
+<body>
+<p>&nbsp;</p>
+
+
+<p>&nbsp;</p>
+<h1> A New Job, A New Website, and A New Cup of Coffee </h1>
+<h2>New Website</h2>
+<p>
+    Welcome internet travelers, to the new edition of my public website. 
+    For the 2019 edition, I decided to go as minimal as possible, as a way to fight back against the endless noise 
+    that the majority of the internet has become. Videos and advertisements attack us at every click, 
+    endless scroll refuses to let us leave, but here in this small corner of the web, 
+    I thought it might be nice to give readers a break from all that activity. A return to basics and normalcy.
+</p>
+
+<p>
+    The previous version of this website was running on a simple wordpress installation, hosted on GCP 
+    with cloudflare acting as a CDN, SSL via Let's Encrypt.
+    Fun, and neat, but it was costing me like $5 a month for the smallest sliver of a server GCP 
+    would provide, and as time went on it became clear
+    that I did not need all these extra wordpress features. The site was nothing more than text and 
+    some fancy menus. With AWS's free tiers and getting out side of the everything-must-run-on-a-machine 
+    mindset, I was able to setup this website using Terraform to do the following things, host files out of S3,
+    then leveraged CloudFront for SSL termination and act as CDN. If I've done my math right everything should be 
+    <bold>FREE</bold>for a year and after that pennies in total cost. For heavier use websites, this might not be
+    the way to go, but for me and this website, this setup is perfect.
+</p>
+<p>
+    All of the code for both the website and deploying the technologies via terraform is available on this 
+    <a href="https://github.com/twstewart42/digital-resume">github repo</a>. So if you want, you can build your 
+    own digital resume or personal website following this as an example.
+</p>
+<h2>New Job</h2>
+<p>
+    In a few days, August 6th, I will start a new job with KCF Technology and I am really looking forward to the new gig.
+    I think it's going to be a place that pushes me to work better and get my hands on a very diverse range of exiting technologies,
+    plus from all accounts, this might be the first professional position with a growing company and not one that is shrinking (YaY!)
+</p>
+<h2> New Cup of Coffee</h2>
+<p>
+    As also hinted in the title, I brewed a fresh carafe full of coffee, and will begin partaking after publishing this page. 
+    I've been told by many folks on the internet, that people like to know these things, and this is in no way a waste of your time.
+</p>
+
+<p> Let me know on <a href="https://twitter.com/twstewart42">twitter @twstewart42</a>, if you like the new look of the website or if you have any other comments.</p>
+</body>
+
+<footer align="center">
+<hr>
+<p align="center">Created by: Tom Stewart, 2019</p>
+<p align="center"><a href="LICENSE">MIT License</a>, code available at <a href="https://github.com/twstewart42/digital-resume">GitHub</a></p>
+</footer>
+
+</html>
+
