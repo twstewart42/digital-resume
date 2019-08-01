@@ -33,19 +33,25 @@
 </p>
 
 <p>
-    The previous version of this website was running on a simple wordpress installation, hosted on GCP 
-    with cloudflare acting as a CDN, SSL via Let's Encrypt.
-    Fun, and neat, but it was costing me like $5 a month for the smallest sliver of a server GCP 
-    would provide, and as time went on it became clear
-    that I did not need all these extra wordpress features. The site was nothing more than text and 
-    some fancy menus. With AWS's free tiers and getting out side of the everything-must-run-on-a-machine 
-    mindset, I was able to setup this website using Terraform to do the following things, host files out of S3,
-    then leveraged CloudFront for SSL termination and act as CDN. If I've done my math right everything should be 
-    <bold>FREE</bold>for a year and after that pennies in total cost. For heavier use websites, this might not be
-    the way to go, but for me and this website, this setup is perfect.
+    The previous version of this website was running on a simple <a href="https://wordpress.org/">Wordpress</a> installation, hosted on 
+    <a href="https://cloud.google.com/">GCP</a> 
+    (Google Compute Platform) with <a href="https://www.cloudflare.com/">Cloudflare</a> acting as a 
+    CDN (Content Distribution Network), SSL via <a href="https://letsencrypt.org/">Let's Encrypt</a>.
+    Fun, and neat, but it was costing me <strike>Big Money</strike> like $5 a month for the smallest sliver of 
+    a micro server GCP would provide, and as time went on it became clear that I did not need all these 
+    extra Wordpress features. The site was nothing more than text and some fancy menus. 
+    With AWS's free tiers and getting outside of the traditional LAMP Stack/everything-must-run-on-a-machine 
+    mindset, I was able to setup this website using 
+    <a href="https://registry.terraform.io/modules/chgangaraju/cloudfront-s3-website/aws/1.0.0">Terraform</a> 
+    to do the following things; host files out of <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html">AWS S3</a>
+    , then leveraged <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-cloudfront-walkthrough.html">CloudFront</a>
+    for SSL termination and act as CDN. If I've done my math right everything should be 
+    <b>FREE</b> for a year and after that pennies in total cost. For heavier use websites, this might not be
+    the way to go, but for me and this website, this setup is perfect, giving me total control over code and infrastructure,
+    cats and dogs, cost and speed.
 </p>
 <p>
-    All of the code for both the website and deploying the technologies via terraform is available on this 
+    All of the code for both the website and deploying the technologies via terraform are available on this 
     <a href="https://github.com/twstewart42/digital-resume">github repo</a>. So if you want, you can build your 
     own digital resume or personal website following this as an example.
 </p>
@@ -55,7 +61,7 @@
     I think it's going to be a place that pushes me to work better and get my hands on a very diverse range of exiting technologies,
     plus from all accounts, this might be the first professional position with a growing company and not one that is shrinking (YaY!)
 </p>
-<h2> New Cup of Coffee</h2>
+<h2>New Cup of Coffee</h2>
 <p>
     As also hinted in the title, I brewed a fresh carafe full of coffee, and will begin partaking after publishing this page. 
     I've been told by many folks on the internet, that people like to know these things, and this is in no way a waste of your time.
