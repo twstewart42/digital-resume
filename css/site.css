@@ -79,7 +79,7 @@ footer {
 
 /* Add a card effect for articles */
 .card {
-  background-color: white;
+  background-color: rgb(221, 221, 221);
   padding: 20px;
   margin-top: 20px;
 }
