@@ -1,0 +1,397 @@
+<html>
+<link rel='stylesheet' id='site-css' href='../css/site.css' type='text/css' >
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Tom Stewart">
+<meta name="description" content="machine learning for fiction writing">
+<div class="topnav">
+  <a class="active" href="../index.html">Home</a>
+  <a href="./expanded-resume.html">Resume</a>
+  <a href="./blog-index.html">Blog</a>
+  <a href="./side-projects.html">Side Projects</a>
+</div>
+<title>T.W.Stewart</title>
+<h1>T.W.Stewart</h1>
+<h2 align="right">My Digital Resume</h2>
+<hr>
+</head>
+
+<body>
+<p>&nbsp;</p>
+
+
+<p>&nbsp;</p>
+<h1>Adventures with Machine Learning for Fiction Writing </h1>
+<p>One part of my head is firmly planted in technology, while another is constantly working on my side-projects such as 
+  <a href="https://stewstunes.com/welcome/">fiction writing</a>. Sometimes those things cross into each other - I like 
+  to imagine stories and one of these sessions was about a person working a menial job and slowly 
+  realizing that they were a small piece in a Neural Network, they keep trying to solve the same problem in their life, 
+  each time trying something different, and as they begin to solve it and become aware to their reality, 
+  the AI controlling everything begins to crumble. A bit like <a href="https://www.imdb.com/title/tt0133093/">The Matrix</a>
+   meets <a href="https://www.imdb.com/title/tt0113957/">The Net</a>.
+</p>
+
+<p><b>OR</b> something like that...</p>
+
+<p>The other key ingredient in this novel idea would be to have an actual AI write parts of the book and see if people 
+  could tell. The beginning would be written entirely by myself, with the AI slowly fading in like intrusive thoughts
+   in between the narrative, and finally taking over the whole story. 
+</p>
+<p>What I didn't know was if that was technically possible or if I was seeing too much fiction in my science fiction.</p>
+
+<p> And so the following is an account of my adventures trying to harness the current state of Machine Learning and 
+  make use of for my project.</p>
+
+<h2>GPT-2</h2>
+<p>In early 2019, the company <a href="https://openai.com/blog/better-language-models/">OpenAI</a> released a new 
+Machine Learning model called GPT-2. Claiming that it was so good at text 
+generation that they had to reduce the size of the model offered to the public for safety and ethical reasons. Right away 
+this one felt like the real deal, I had found a half dozen of random student projects on github, trying to DIY different 
+style of GANNS or RNNs for text generation, but none of them felt like they would be powerful enough. In addition to 
+the hype around gpt-2, there were a number of helpful articles and walk-thrus on how to get started using it, and or
+training it on new data. This is what I really wanted, the ability to train the model on previous and highly rated fiction
+novels to see if it could compete.
+</p>
+
+<h2>Data Wrangling</h2>
+<p>
+  To train any ML model you need data, and lots of it + plus time and a hearty GPU. After the side quest of acquiring 
+  the proper hardware and getting CUDA/tensorflow setup, I was ready to tackle the Data part. Over the years I've 
+  collected a hefty amount of ebooks. For this project,  I needed more, so I began seeking out alternative sources
+  until I had over 1000 different books from Fantasy and SciFI.
+</p>
+
+<p>All of these books came in either epub format, .lit (?) or a flat PDF, so the task was to convert all of those to text, 
+  which then could be imported into a binary blob for training. I wrote a script, ( eboook.py ) to handle this task, 
+  but what I learned is that no 2 ebooks are the same, with different headings, section names, etc. It's almost infeasible
+  to select just "Chapter 1" and output that, as in most cases that could be section 002, or 004, or any number really. 
+  First pass was to output the full book, into individual text files.</p>
+
+<p>I want to pause here and give a big shout out to <a href="https://www.gwern.net/GPT-2">Gwern</a>, the creator of 
+  <a href="https://www.thiswaifudoesnotexist.net/"></a>thiswaifudoesnotexist.net</a> and the gpt-2-poetry project.
+  His work allowed me and many others to follow in his footsteps and use this awesome technology. User 
+  <a href="https://github.com/nshepperd/gpt-2">nsheppard's Git repo</a> seems to be the best for training 
+  GPT-2 on new data.
+</p>
+
+<pre>
+$ ls -l ../data_origs/originals/txt_proc/*.txt | wc -l
+1019
+$ PYTHONPATH=src python3 encode.py ../data_origs/originals/txt_proc/ novels.npz
+# takes like 15 minutes with the large dataset
+$ PYTHONPATH=src python3 train.py --model_name 117M --dataset novels.npz --save_every 1000 --sample_every 100 --run_name novel1
+Loading dataset...
+100%
+dataset has 38779104 tokens
+Training...
+[16 | 6.98] loss=3.34 avg=3.34
+[17 | 8.45] loss=3.25 avg=3.30
+[18 | 9.93] loss=3.29 avg=3.29
+[19 | 11.42] loss=3.27 avg=3.29
+[20 | 12.90] loss=3.22 avg=3.27
+[21 | 14.38] loss=3.20 avg=3.26
+...
+99 | 131.98] loss=3.21 avg=3.22
+======== SAMPLE 1 ========
+ok to them, he thought.  
+They turned around—and the girl turned, and she fell.  
+Hitting a hard wall, he pulled a gun from her waist, and fired at her.  
+She did not dare go to ground.  
+The girl was unconscious.  
+Her breathing was heavy, and she did not speak.  
+She saw the light of a flash in the sky.  
+A massive star would have exploded that day.The next day she and Alia were 
+working with the man who lived in a forest,and in the morning she saw that 
+it had exploded and the town had fallen.  
+She recognized it as the village where her brothers lived.  
+It was small and quiet here, but she could tell that men had been there 
+before the town's fall.  
+She had a hard time telling the difference between what might have been the 
+town and the village.  
+They were very far away, near the old town, but they were near what she 
+called the 'gates.  
+She had her head above the ground as well, and she did not want to go in 
+and shoot anyone.  
+She had left her weapon behind, and she went to the town gate.  
+She looked out of the gate, and she saw that there were two men hiding 
+beneath a stone-thick fence.  
+She took off her gloves, and saw that they were carrying the two men.  
+She stood before them.  
+Her eyes were dark and wide, and she did not dare go in.  
+She saw him running toward the fence, and she did not dare go in on him.
+She made her way through a man's door, and saw that he was carrying an iron.  
+With her pistol, she fired at him.  
+With the gun and the iron gun that was with her, she shot him in a single 
+blow, and the man who had shot him stood 
+up and ran toward her.And the same thing happened to her brothers and 
+sisters—where are you?She went out to the woods, knowing she had to.  
+With a knife and a saw, she started into the woods, aiming toward the 
+hills below.  
+Some day she and Alia had got back down the road, and her brothers and 
+sisters saw her go.And she stood in the open, and she thought, I am going 
+to take you back down the road.  
+It was going to be a long day, and she knew what it was.  
+
+...
+# and between 24 and 48 hours later it's been properly cooked.
+</pre>  
+
+<p> For all trained models, I used the same couple of statements to see what results I would get.
+<blockquote>
+“What am I missing?” He asked to the machine before him. The machine was a metal contraption with a sphere in the center. If his machine could keep that sphere in the center without external energy sources, he would achieve the improbable. Infinite Energy. 
+</blockquote>
+<pre>
+$ python3 src/interactive_conditional_samples.py --model_name novel1 --temperature 0.9 --top_k 30
+model prompt >>> “What am I missing?” He asked to the machine before him. The machine was a metal contraption with a 
+sphere in the center. If his machine could keep that sphere in the center without external energy sources, he would 
+achieve the improbable. Infinite Energy.
+======================================== SAMPLE 1 ========================================
+       
+The infinite.  
+He had no other answer; why was there no other thing to get him to understand? All he knew now about the existence 
+of the infinite was — could NOT be.  
+He looked around, saw it, saw the other world outside, and saw it, and it held him and him, and he saw, and felt it,
+ and yet it did not release him to the world.  
+This was a machine.  
+This was a machine belonging to the agency of others, of all the universes, and all the entities that comprised it.
+“We are not brothers,” the machine said.  
+“We are not like other men.  
+We are not as we were.”The man had no words for “brother” but he had said that, and the machine responded by clicking.  
+The machine had to know the world.  
+Could he guess what it would make of his friends? They were holding him in a circle of three, not two.  
+The circle of three was larger than the one at which he was holding.  
+“Your friends are not the only entities in existence who are connected to you,” the machine told him.  
+“They have been here before and they are still here.  
+They are the Earths, the Great Sphere, that we know of you.  
+They will be all the way to Earth.  
+They will stand in the clearing before you.”“It is a prophecy of mine,” the man said, feeling the machine’s presence.  
+“That we must be ready.” His hand flapped like the hand of a lover.“All in good time,” the machine said.  
+“For the Balance.”He was, of course, not a great man, but his spirit was tender.  
+He knew that the Balance was behind everything.  
+His world was not balanced on a single step.  
+He’d never been any great in any person, but it seemed that the great Balance had always been balanced on a single step,
+ before they’d cut that one off.  
+He’d never known that he had ever been born a human, but he felt that balance with a mortal might be impossible
+================================================================================
+      
+</pre>
+As one can see, it "works" but there's definitely room for improvement. I see a lot of circular conversations, repeated 
+phrases and sometime, absolute copy/paste from one of the src stories instead of something new. 
+</p>
+
+<p>I'll state here again, this is where I wasn't sure if I was expecting too much of the technology or if I 
+  should be happy with the current results and learn to love the quirks.</p>
+
+<h2>Phase 2...let's try all the things</h2>
+<p>As any real or pretend scientist will tell you, it can be hard to find the point at which enough is enough and 
+  to let the results be as they are, and so I continued to break down my data into different sizes and shapes, 
+  sometimes only using the first few chapters instead of the entire book, or outputting the books into one mega text file,
+instead of individual files. A few attempts using only a single author but their entire catalogue. 
+Over the course of a few weeks, I would setup the data in the evening, start the training, and in the morning decide if it 
+was doing well enough to continue or stop and try something else. But with all that effort and fun, I never 
+really got better results than the first training. I do think I need better formatted data, but at this point I'm not
+sure how to achieve that. But I will keep trying, and eventually I do believe I'll have something I can work with
+to make this sci-fi daydream become a real novel.
+</p>  
+<h3>fantasy1</h3>
+<pre>
+python3 src/interactive_conditional_samples.py --model_name fantasy1 --temperature 0.9 --top_k 30
+Model prompt >>> “What am I missing?” He asked to the machine before him. The machine was a metal contraption with a 
+sphere in the center. If his machine could keep that sphere in the center without external energy sources, he would 
+achieve the improbable. Infinite Energy.
+======================================== SAMPLE 1 ========================================
+The object itself was a tiny cube; it was not large enough to reach into the center of the sphere to cause it to 
+collapse. As if it were an egg.
+
+The contraption was the first I encountered. “How do they do it?” He asked as he moved over it.
+
+“The best I can do is to just do it without being able to do anything else with the machine.” As he pointed toward 
+the object, the object began to slide outward.
+
+The contraption was a large, white, circular sphere that had two sides. They were the corners of the ballista. It was 
+a large, circular ballista. The ballista moved with its axis, and this time it was not moving with the other side. 
+The two halves of the sphere were at the same time, and the machine seemed to be moving along some sort of horizontal 
+axis.
+
+When I stood there, I wondered what the purpose of the contraption was, but it was obvious. The object was being moved, 
+as if through a series of concentric circles. It felt as if the machine was being moved. And then, just as the 
+contraption began to move, the object suddenly vanished.
+
+“I see. I see.” I said to the machine as I moved over the ballista.
+
+“Oh. That . . .” The object vanished.
+
+“Why don’t you go to the other side?” I asked him.
+
+“I know it would be a waste to bring that sphere to the other side.”
+
+“But why?”
+
+“Because, just because something is gone, it doesn’t mean nothing. I can do something that I can do without touching 
+anything.”
+
+“Well, we need to go to it,” I said.
+
+“Then go to it,” he said back.
+
+“We need to go to that side.” I pointed over the machine.
+
+“We are in a room,” he said.
+
+“The right side is where the ballista was moving,” I said.
+
+“The left,” he said.
+
+“I’m sure.”
+
+“The machine can do everything,” he said.
+</pre>
+<h3>fantasy2</h3>
+<pre>
+$ python3 src/interactive_conditional_samples.py --model_name fantasy2 --temperature 0.9 --top_k 30
+What am I missing?” He asked to the machine before him. The machine was a metal contraption with a sphere in 
+the center. If his machine could keep that sphere in the center without external energy sources, he would achieve 
+the improbable. Infinite Energy.
+======================================== SAMPLE 1 ========================================
+ He’d built it himself.
+
+His arm grew numb, then it stopped, and he felt a chill and the feel of something cold, something as solid as the earth. 
+His heart stopped, and his lungs were already failing. He tried to turn his head to look at the ceiling—it was a very 
+tall thing, about forty feet tall. It had a dome, like the dome in the cavern outside the city itself, where air rose 
+above it. It would have been easy to take off a piece of it just then, and take up two or three of its sides just to 
+reach the dome. He felt the weight of the thing falling off in the air like a falling horse. Just then something slammed 
+into it, a rock like a rock thrown back a few feet. It slammed against his arm and, somehow, he fell.
+
+He felt the cold air, and he felt its bite. It was a cold, heavy, strong thing. He had to pull himself up. He was 
+nearly at the top of the dome when the rock hit. He didn’t have to pull back, not even to the point where he didn’t 
+feel the whole thing hit. He was suddenly falling again. It stopped, and he let out a small cry.
+
+“No! No!”
+
+The air was so cold, he was almost choking.
+
+“Aaaaahhhh!”
+
+His hands were freezing so badly that he couldn’t get up. He was holding his head against the dome, and his lungs 
+were going to shut down. As he started to get up, something hit him again. It was a big rock, and it smashed out at 
+him, one big chunk of stone falling on top of him and hitting the floor, hitting the ceiling, hitting the window of 
+the cellar, and hitting all of them down, right up to the very top and leaving him on his face. He struggled up and 
+found his arm and began to struggle.
+
+A big stone hit him in the face, hard, and he was not sure why—the thing hit his face in a terrible collision. It hit 
+his chest and nose, and his mouth opened. He started to breathe hard, and his chest started growing larger and bigger, 
+and his mouth came out of him, and he tried to open his mouth, to tell the thing what to do. It wouldn’t, but something 
+else hit him in the throat.
+</pre>
+<h3>Steven King Books</h3>
+<pre>
+$ python3 src/interactive_conditional_samples.py --model_name steve1 --temperature 0.9 --top_k 30
+Model prompt >>> "What am I missing?” He asked to the machine before him. The machine was a metal contraption with a 
+sphere in the center. If his machine could keep that sphere in the center without external energy sources, he would 
+achieve the improbable. Infinite Energy.
+======================================== SAMPLE 1 ========================================
+
+
+“Thank you, Mr. Potter.”
+
+The machine was a little too small to put the cylinder up on its own, but it did what it was supposed to do, which was 
+to put the cylinder in place on the machine. Because the machine could move so fast, it could not be kept moving by 
+some weird mechanical device. And as far more than three other machines had ever been put into the center of the machine, 
+it had managed to keep it moving on its own. That was the point, and as of now it was the only one left to do so.
+
+“You're right, and it did its job, but my machine is not a machine.”
+
+“Why do you have to worry about that?”
+
+“I have no need for that.”
+
+The machine seemed to shake and twitching slightly as it did so. It was a little too small to make the cylinder move up 
+and down, but that didn�t stop it from moving.
+
+It held the cylinder in place and started moving. That was the only thing it could do, and it was not a much bigger 
+machine.
+
+“I want to say a few words,”
+
+The machine seemed to move and to start moving as soon as it was moved. It didn�t stop moving, but it changed. It had 
+changed its head, got its hands on its legs and began to pull them at the same time to make it move. It was moving at 
+three hundred miles a second on its own.
+
+“I want to say a few words,” the robot said at long last.
+
+It did so with the same sudden and sudden speed of its original motion, but it could have stopped now, and the machine 
+would still have been moving. The machine would have moved faster than it was now, but no more.
+
+“What do I do now?”
+
+“I want to say a few words,” the robot asked.
+
+It did so with a very small smile. The robot had a little piece of the machine in its hands and had started to pick it 
+up, putting it on its shoulders and making it fly up.
+
+“I want to say a few words,” the robot said. It did so, and with a small smile.
+
+The robot turned as fast as it could.
+</pre>
+<h3>117M - The original gpt-2</h3>
+<p>Here are results with the stock gpt-2 model 117M</p>
+<pre>
+Model prompt >>> "What am I missing?” He asked to the machine before him. The machine was a metal contraption with a 
+sphere in the center. If his machine could keep that sphere in the center without external energy sources, he would 
+achieve the improbable. Infinite Energy.
+======================================== SAMPLE 1 ========================================
+‡
+
+When she looked at him, his face had turned dark. It was dark and cold, but she kept the smile on her smile.
+  
+"I've seen you before, don't get me wrong. I've met you before. But I am not like you. I am not as tall as you."
+   
+A smile began to appear on the white-robed woman's face, and then he let out a soft sigh. She smiled back, she smiled 
+back… but then she stopped.
+    
+"I've become like you. I've lost my sense of right and wrong." He said in a voice very similar to her smile that he 
+had been following. He said that he would go back to that situation if he did not think that she was trying to do 
+him harm, but that she did not understand him at all and was simply trying to kill him. The girl looked even more 
+pale, not like she had taken on a human form. At this point, she started crying out in frustration and crying out 
+in pain.
+    
+But you were just too strong…"
+    
+A voice from the machine spoke, and the girl froze, her eyes widened. She was holding him by the hand, and he was 
+trembling, his shoulders sagging, his face trembling. However, the words were not a threat, but something to her. 
+"I'm sorry about that."
+    
+She nodded, and the machine slowly took on a voice, and the girl cried out again. However, no one spoke, and the 
+voice was silent for a few short seconds.
+    
+"I know you want to kill me, and I know you want to kill me, and I know you want to kill me. But I'm sorry for 
+that. I'm sorry we didn't live in peace, for the past ten years, and for now. I want to see you grow up and find 
+your purpose, and I want to see you understand that I'm not a robot, who's just a little girl who wanted a place 
+to live. I want to see you understand that you need to find happiness, and I want to see you see the joy that you 
+will have with humans, and that you will live with everyone else who lives."
+    
+The machine slowly began to work on his hands.
+    
+"And now you want to kill me?"
+    
+"No, I want my life to be worth anything, even if it means the end of your life." The girl shook her head
+</pre>
+
+<p>
+  And that is the story so far on my adventure with Machine Learning for fiction writing. So as one can see, at least the way
+  I've got it setup, it isn't ready for prime time, but given more time and understanding on my part, I think it still has a lot
+  of potential. Something I will keep experimenting with and building until I have a good platform.
+</p>
+
+</body>
+
+<footer align="center">
+<hr>
+<p align="center">Created by: Tom Stewart, 2019</p>
+<p align="center"><a href="../LICENSE">MIT License</a>, code available at <a href="https://github.com/twstewart42/digital-resume">GitHub</a></p>
+</footer>
+
+</html>
+
