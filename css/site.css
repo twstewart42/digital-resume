@@ -54,14 +54,17 @@ code {
   text-decoration: none;
   font-size: 17px;
   font-style: italic;
+  border-radius: 5px;
 }
 
 .topnav a:hover {
   background-color: #999999;
+  border-radius: 5px;
 }
 
 .topnav a.active {
   color: black
+  border-radius: 5px;
 }
 
 .column {
@@ -105,6 +108,7 @@ code {
   padding: 10px;
   margin-top: 10px;
   max-width:650px;
+  border-radius: 5px;
 }
 
 .card a:hover {
@@ -128,3 +132,22 @@ code {
   }
 }
 
+/* Pagination links */
+.pagination a {
+  color: black;
+  float: center;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border-radius: 5px;
+}
+
+/* Style the active/current link */
+.pagination a.active {
+  background-color: #0089a1;
+  color: black;
+  border-radius: 5px;
+}
+
+/* Add a grey background color on mouse-over */
+.pagination a:hover:not(.active) {background-color: #ddd;}
