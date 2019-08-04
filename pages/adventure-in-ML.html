@@ -77,7 +77,7 @@ novels to see if it could compete.
   GPT-2 on new data.
 </p>
 
-<pre>
+<pre><code>
 $ ls -l ../data_origs/originals/txt_proc/*.txt | wc -l
 1019
 $ PYTHONPATH=src python3 encode.py ../data_origs/originals/txt_proc/ novels.npz
@@ -137,13 +137,13 @@ It was going to be a long day, and she knew what it was.
 
 ...
 # and between 24 and 48 hours later it's been properly cooked.
-</pre>  
+</code></pre>
 
 <p> For all trained models, I used the same couple of statements to see what results I would get.
 <blockquote>
 “What am I missing?” He asked to the machine before him. The machine was a metal contraption with a sphere in the center. If his machine could keep that sphere in the center without external energy sources, he would achieve the improbable. Infinite Energy. 
 </blockquote>
-<pre>
+<pre><code>
 $ python3 src/interactive_conditional_samples.py --model_name novel1 --temperature 0.9 --top_k 30
 model prompt >>> “What am I missing?” He asked to the machine before him. The machine was a metal contraption with a 
 sphere in the center. If his machine could keep that sphere in the center without external energy sources, he would 
@@ -177,7 +177,7 @@ He’d never been any great in any person, but it seemed that the great Balance 
 He’d never known that he had ever been born a human, but he felt that balance with a mortal might be impossible
 ================================================================================
       
-</pre>
+</code></pre>
 As one can see, it "works" but there's definitely room for improvement. I see a lot of circular conversations, repeated 
 phrases and sometime, absolute copy/paste from one of the src stories instead of something new. 
 </p>
@@ -197,7 +197,7 @@ sure how to achieve that. But I will keep trying, and eventually I do believe I'
 to make this sci-fi daydream become a real novel.
 </p>  
 <h3>fantasy1</h3>
-<pre>
+<pre><code>
 python3 src/interactive_conditional_samples.py --model_name fantasy1 --temperature 0.9 --top_k 30
 Model prompt >>> “What am I missing?” He asked to the machine before him. The machine was a metal contraption with a 
 sphere in the center. If his machine could keep that sphere in the center without external energy sources, he would 
@@ -248,9 +248,9 @@ anything.”
 “I’m sure.”
 
 “The machine can do everything,” he said.
-</pre>
+</code></pre>
 <h3>fantasy2</h3>
-<pre>
+<pre><code>
 $ python3 src/interactive_conditional_samples.py --model_name fantasy2 --temperature 0.9 --top_k 30
 What am I missing?” He asked to the machine before him. The machine was a metal contraption with a sphere in 
 the center. If his machine could keep that sphere in the center without external energy sources, he would achieve 
@@ -285,9 +285,9 @@ A big stone hit him in the face, hard, and he was not sure why—the thing hit h
 his chest and nose, and his mouth opened. He started to breathe hard, and his chest started growing larger and bigger, 
 and his mouth came out of him, and he tried to open his mouth, to tell the thing what to do. It wouldn’t, but something 
 else hit him in the throat.
-</pre>
+</code></pre>
 <h3>Steven King Books</h3>
-<pre>
+<pre><code>
 $ python3 src/interactive_conditional_samples.py --model_name steve1 --temperature 0.9 --top_k 30
 Model prompt >>> "What am I missing?” He asked to the machine before him. The machine was a metal contraption with a 
 sphere in the center. If his machine could keep that sphere in the center without external energy sources, he would 
@@ -335,10 +335,10 @@ up, putting it on its shoulders and making it fly up.
 “I want to say a few words,” the robot said. It did so, and with a small smile.
 
 The robot turned as fast as it could.
-</pre>
+</code></pre>
 <h3>117M - The original gpt-2</h3>
 <p>Here are results with the stock gpt-2 model 117M</p>
-<pre>
+<pre><code>
 Model prompt >>> "What am I missing?” He asked to the machine before him. The machine was a metal contraption with a 
 sphere in the center. If his machine could keep that sphere in the center without external energy sources, he would 
 achieve the improbable. Infinite Energy.
@@ -378,7 +378,7 @@ The machine slowly began to work on his hands.
 "And now you want to kill me?"
     
 "No, I want my life to be worth anything, even if it means the end of your life." The girl shook her head
-</pre>
+</code></pre>
 
 <p>
   And that is the story so far on my adventure with Machine Learning for fiction writing. So as one can see, at least the way
