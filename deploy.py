@@ -6,10 +6,11 @@ Description:
     compares local md5 sum with s3 etag/md5sum
     upload new if md5's do not match
 '''
+import os
+import hashlib
 import boto3
 import botocore
-import hashlib
-import os
+
 
 def _s3_md5sum(resource_name, bucket_name):
     '''get s3 md5sum'''
@@ -20,36 +21,43 @@ def _s3_md5sum(resource_name, bucket_name):
         )['ETag'][1:-1]
     except botocore.exceptions.ClientError:
         md5sum = None
-        pass
     return md5sum
 
 def _local_md5sum(resource_name):
     '''get local file md5sum'''
-    md5 = hashlib.md5(open(resource_name,'rb').read(1024 * 1024)).hexdigest()
+    md5 = hashlib.md5(open(resource_name, 'rb').read(1024 * 1024)).hexdigest()
     return md5
 
 def _upload_file(resource_name, bucket_name):
     '''upload changed file to s3'''
-    s3 = boto3.resource('s3')
+    s3_resource = boto3.resource('s3')
     # local file, bucket name, key name
-    s3.meta.client.upload_file(resource_name, bucket_name, resource_name)
+    s3_resource.meta.client.upload_file(resource_name, bucket_name, resource_name)
 
 def main():
+    '''find all files in project
+       check if file md5 does not match s3
+       if no match, upload new version
+    '''
     bucketname = 'twstewart.me'
     directory = '.'
-    exclude = ['.git', '.terraform']
+    exclude = ['.git', '.terraform', 'terraform.tfstate', 'terraform.tfstate.backup']
     for dirpath, dirnames, files in os.walk(directory):
-        [dirnames.remove(d) for d in list(dirnames) if d in exclude]
+        for dirn in list(dirnames):
+            print(dirn)
+            if dirn in exclude:
+                dirnames.remove(dirn)
         for name in files:
-            #print(os.path.join(dirpath,name))
-            filename = os.path.join(dirpath,name)[2:]
-            print (filename)
-            s3_md5 = _s3_md5sum(filename, bucketname)
-            lcl_md5 = _local_md5sum(filename)
-            print (lcl_md5, s3_md5)
-            if lcl_md5 != s3_md5:
-                print("upload new")
-                _upload_file(filename, bucketname)
+            if name not in exclude:
+                #print(os.path.join(dirpath,name))
+                filename = os.path.join(dirpath, name)[2:]
+                print(filename)
+                s3_md5 = _s3_md5sum(filename, bucketname)
+                lcl_md5 = _local_md5sum(filename)
+                print(lcl_md5, s3_md5)
+                if lcl_md5 != s3_md5:
+                    print("upload new")
+                    _upload_file(filename, bucketname)
 
 if __name__ == "__main__":
     main()
