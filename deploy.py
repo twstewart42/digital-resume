@@ -33,7 +33,6 @@ def _upload_file(resource_name, bucket_name):
     body = open(resource_name, 'rb')
     s3_resource = boto3.resource('s3')
     # local file, bucket name, key name
-    #s3_resource.meta.client.upload_file(resource_name, bucket_name, resource_name)
     s3_resource.meta.client.put_object(
         Bucket=bucket_name,
         Key=resource_name,
