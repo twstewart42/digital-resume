@@ -63,7 +63,7 @@ code {
 }
 
 .topnav a.active {
-  color: black
+  color: black;
   border-radius: 5px;
 }
 
