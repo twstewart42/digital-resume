@@ -7,7 +7,7 @@ The hosting of this content is setup on a static S3 bucket, with cloudfront dist
 # Setup
 I elected to use terraform to create the S3 bucket, and setup the cloudfront https/CDN capabilities
 
-see (main.tf)[main.tf] for more details on the modules I am using to create these assets in AWS.
+see [main.tf](main.tf) for more details on the modules I am using to create these assets in AWS.
 
 ```
 terraform init
@@ -28,7 +28,7 @@ aws cli method
 aws s3 cp index.html s3://twstewart.me/index.html
 ```
 
-Using the (deploy.py)[deploy.py] script, it compares the md5sum of the content to what S3 has, and if those are different it assumes that the local version is newer and uploads it.
+Using the [deploy.py](deploy.py) script, it compares the md5sum of the content to what S3 has, and if those are different it assumes that the local version is newer and uploads it.
 
 ```
 $ python3 deploy.py 
