@@ -30,9 +30,16 @@ def _local_md5sum(resource_name):
 
 def _upload_file(resource_name, bucket_name):
     '''upload changed file to s3'''
+    body = open(resource_name, 'rb')
     s3_resource = boto3.resource('s3')
     # local file, bucket name, key name
-    s3_resource.meta.client.upload_file(resource_name, bucket_name, resource_name)
+    #s3_resource.meta.client.upload_file(resource_name, bucket_name, resource_name)
+    s3_resource.meta.client.put_object(
+        Bucket=bucket_name,
+        Key=resource_name,
+        Body=body,
+        ContentType='text/html'
+    )
 
 def main():
     '''find all files in project
@@ -49,7 +56,6 @@ def main():
                 dirnames.remove(dirn)
         for name in files:
             if name not in exclude:
-                #print(os.path.join(dirpath,name))
                 filename = os.path.join(dirpath, name)[2:]
                 print(filename)
                 s3_md5 = _s3_md5sum(filename, bucketname)
