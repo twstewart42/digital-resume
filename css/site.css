@@ -8,6 +8,11 @@ body,p{
   padding:3px;
   background-color: #e3e3e3;
 }
+
+.headdiv {
+  line-height:100%;
+  padding:0px;
+}
   
 h1,h2,h3{
   line-height:1.2;
