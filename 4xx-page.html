@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<link rel='stylesheet' id='site-css' href='css/site.css' type='text/css'/>
+<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js'></script>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="author" content="Tom Stewart"/>
+<meta name="description" content="error-page"/>
+<meta name="keywords" content="error page, 4XX">
+<div class="topnav">
+  <a class="active" href="index.html">Home</a>
+  <a href="pages/expanded-resume.html">Resume</a>
+  <a href="blog/index.html">Blog</a>
+  <a href="pages/side-projects.html">Side Projects</a>
+  <img src="images/ts-icon-star.png" alt="site icon" style="float:right;width:64px;height:64px;"/>
+</div>
+<title>Uh-Oh | T.W.Stewart</title>
+<h1 style="font-size:50px;">T.W.Stewart</h1>
+<h2 align="right">My Digital Blog</h2>
+<hr>
+</head>
+
+<body>
+<h1>Oopps!</h1>
+
+<p> 
+    Sorry - 
+    <script>
+    var excuses = [ 
+        'A spider ate your packet',
+        'A layer 8 issue has occurred',
+        'Calling in backup, but they are out to lunch',
+        'This is NOT the page you were looking for',
+        'Better luck next time',
+        '*grinding noises*',
+        'not sorry',
+        'ladies and gentlemen, this is your captain speaking. We are experiencing some turbulence, please remain seated for the remained of your visit.',
+        ':-('
+    ];
+    pick = Math.floor(Math.random() * excuses.length);
+    document.write(excuses[pick])
+    </script> 
+    <br>
+    To make up for it, here is a random picture of 
+    one of my family's faithful animals
+</P>
+
+<br>
+<div align=center id="banner-load"></div>
+<script>
+    var images = ['daisy.jpg', 'dog_cat.jpg', 'dog_cat_2.jpg', 'good_dog.jpg', 'tongue.jpg', 'wink.jpg'];
+
+    $('<img class="fade-in" src="images/animals/' + images[Math.floor(Math.random() * images.length)] + '">').appendTo('#banner-load');
+</script>
+<br>
+<div align=center>
+<p>
+    <a href="index.html">Return to Homepage</a>   
+</p>
+</div>
+</body>
+
+<footer align="center">
+<br>
+<hr>
+<p align="center">Created by: Tom Stewart, 2019</p>
+<p align="center"><a href="LICENSE">MIT License</a>, code available on my <a href="https://github.com/twstewart42/digital-resume">GitHub</a></p>
+</footer>
+
+</html>
