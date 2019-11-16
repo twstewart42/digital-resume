@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+<link rel='stylesheet' id='site-css' href='../css/site.css' type='text/css'/>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="author" content="Tom Stewart"/>
+<meta name="description" content="webpage"/>
+<meta name="keywords" content="template">
+<div class="topnav">
+  <a class="active" href="../index.html">Home</a>
+  <a href="./expanded-resume.html">Resume</a>
+  <a href="../blog/index.html">Blog</a>
+  <a href="./side-projects.html">Side Projects</a>
+  <img src="../images/ts-icon-star.png" alt="site icon" style="float:right;width:64px;height:64px;"/>
+</div>
+<title>How Centralized Logging Saved Our Jobs| T.W.Stewart</title>
+<h1 style="font-size:50px;">T.W.Stewart</h1>
+<h2 align="right">My Digital Blog</h2>
+<hr>
+</head>
+
+<body>
+<p>&nbsp;</p>
+
+
+<p>&nbsp;</p>
+<h1> Memory of a Postmortem </h1>
+<p>I am writing about a past experience, one that never ceases to make me laugh and shudder at how crazy 
+  and simple the solution became once we had it figured out. I do apologize for lack of screen shots, this all occurred 
+  over 3 years ago, but I think the lessons learned are still relevant.
+</p>
+<br>
+<img align=center src="../images/memes/train-crash-s.png"></img>
+<h2> Background</h2>
+<p>
+  One of the products I was gifted with administering was a very large content management solution, that on this single product 
+  when you added up each individual site that we hosted on this platform, was in the millions of views a day. This was all co-hosted 
+  in a datacenter, a Webscreen hardware solution to block malicious traffic, running a series of Cisco firewalls, some F5 Load Balancers, 20 some VCenter clusters, and five or so 
+  storage back ends. The app itself was a very bloated java app, that required no less than 28GB of RAM per running process,
+  we generally ran 2 processes on each VM, with northward of 60 VMs in total to handle the traffic. Totally ready for cloud scale, am I right? 
+</p>
+<br>
+<p>
+  All of that + not a single solution for centralized logging and because this product had changed hands so many times through
+  acquisitions and mergers, we had not a single developer resource available. Just keep it alive, it's still making money,
+  but let's not do anything to improve Quality of Life. Being someone whose job it is to fix things, I pushed back as hard as 
+  I could on this.
+</p>
+<br>
+<p>
+  Fun side note -- when I joined, the team had migrated monitoring to New Relic, but the old Nagios instance was still online
+  and was emitting over 700 critical notifications per minute. The old team had built a lot of custom monitoring to alert 
+  when things were going south with the app, the new team pretty much lost all that insight when trying to migrate to New Relic.
+  Two months of side work between sprints, I was able to clean out the cruft and turn Nagios back into it's former glory, 
+  and it became our first place to look for issues presenting.
+</p>
+
+<h1>Where Txhings Went Wrong</h1>
+<p>
+  <b>Blamoo! DOS attack!</b> everything is on fire, and people are losing their minds...about once a month we'd get a huge surge in traffic, 
+  our Webscreen solution would fail to respond, 
+  all the traffic came in, slammed our very heavy java apps, and 20 severs or so would fall over, and it would take us an hour 
+  or so to mitigate and get things back in order. It was very disruptive to our clients, and these events felt entirely 
+  invisible to me, the webscreen interface was overly clicky, cisco logs were too fast to read and isolate patterns. 
+</p>
+<br>
+<p>
+  ...and eventually it got worse...like every week we were down for hours, the time between events getting shorter, our managers and clients
+  getting redder in the face each time. Jobs were threatened, it got so bad, that our firewalls were even crashing from the overwhelming amount of traffic. 
+  They would fail over, die, fail over again, and to make matters worse, our secondary was not in full sync with our primary, so things 
+  like certs would fail and have to be manually added up to the secondary.
+  What do we do? It's chaos.
+</p>
+<br>
+<img align=center src="../images/memes/disaster-girl-s.jpg"></img>
+
+
+<h1>Where Things Went Right</h1>
+<p>
+  We are blind, I decried to our manager. We've got to build something that can show us what is happening. Out of choices, and having a good 
+  track record in the past, my manager let me off the reins. I abandoned my ongoing sprint, and created a new epic to do this. 
+</p>
+<br>
+<p>
+  I knew we had to be able to visualize the traffic, then narrow down to exact IPs. Which sounded more and more like a centralized logging
+  solution.
+</p>
+<br>
+<p>
+  At the time, the 2 most popular open-source logging solutions were <a href="https://www.elastic.co/what-is/elk-stack">ELK(Elasticsearch, Logstash, Kibana) stack</a> 
+  and <a href="https://www.graylog.org/">graylog2</a>. I had small experience with each, but wanted something that could handle billions of events
+  from our firewalls. I didn't think I needed app metrics, or data from the F5s. We just needed to see the traffic, then we could build out 
+  black lists and anything else. This solution would be highly targeted to this need only, so as to not waste time with extra configuration or 
+  use cases.
+</p>
+<br>
+<p>
+  I ended up going with ELK stack. I had tried graylog2 for another solution and while some things appeared easier, without the ability to transform logs(Logstash),
+  it gave me a lot of trouble in my testing. So I moved on to ELK, I configured Kibana and Logstash to be on one VM, with 3 nodes of 2 TB volumes, for elasticsearch. 
+</p>
+<br>
+<p>
+  We were able to very quickly build visualizations and dashboards, the next DDos hit and we were prepared within about 3 days of time from Okay to Ready.
+</p>
+<br>
+<p>
+  This is the part I wish I still had screen shots for -- It became immediately obvious that what the firewall was seeing and what the Webscreen was showing were opposites. The webscreen sits in front of 
+  the firewalls, so the patterns should be the exact same, with some reduced amount of traffic on the firewalls if the webscreen was activated.
+  Well, we got the opposite, The webscreen saying I don't see a huge spike of incoming traffic, our firewalls logs jumping from thousands to millions
+  per second. Something was very very off about the whole situation. I talked with other experts around our team and the only thing we could agree on
+  was that it looked like the webscreen was wrong about everything. 
+</p>
+<br>
+<img align=center src="../images/memes/jurassic-p-s.png"></img>
+<br>
+<p>
+  Digging into the logs further, we realized that a large majority of the IPs in the flood were our own! It turned out that the webscreen had a software
+  button that could flip which "side" was being monitoring. Ingress or Outgress, somehow through all the months of continued Dos, we had missed 
+  that someone had flipped the configuration to monitor our Outgress traffic between the webscreen and the firewalls. 
+  We were defending the internet from ourselves (probably a wise choice jk). 
+</p>
+<br>
+<p>
+  After pressing the single button, we pretty much did not experience a Denial of Service event that took us down ever again. Although any proof 
+  had long since gone away, the sheer amount (this was not the only incident) of misconfigurations and poor practices lead me to believe 
+  that there were some intentional bombs left behind by old teams. But with the right attitude and tools, you too can root out those gremlins
+  and defeat them. Turn an old legacy behemoth, into something that can float as long as the company demands.
+</p>
+<br>
+<p>
+  The ELK stack also showed that over 75% of our internal traffic was coming/going to a dead <a href="https://graphiteapp.org/">graphite</a> server. 
+  It had locked up so bad, it had rebooted into read only single user mode, but the agents on every server didn't care and kept sending, failing that, and resending, on and on.
+</p>
+
+<h1>In Summary</h1>
+<p>
+  When big problems present, have a way to comprehend what is happening, whether this is centralized logging with visualizations, or good and deep 
+  monitoring. Which technology you choose to accomplish that goal, is much less important than getting something quickly stood up and immediately 
+  provide value to your team.
+</p>
+<br>
+<p>
+  After all those lessons learned, and some more company shuffling we had a new product (the one above finally End of Life'd), once again 
+  without centralized logging and wouldn't you believe it management would not approve me to work on a solution like the above. 
+  Sighting that since we were in the cloud it would be too expensive. I argue that the expense from downtime and disruptive work is far 
+  more than the cost of storing and computing that data, but could not get them to see it that way.
+</p>
+
+<footer align="center">
+<hr>
+<p align="center">Created by: Tom Stewart, 2019</p>
+<p align="center"><a href="../LICENSE">MIT License</a>, code available at <a href="https://github.com/twstewart42/digital-resume">GitHub</a></p>
+</footer>
+
+</html>
+
