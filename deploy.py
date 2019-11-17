@@ -30,16 +30,18 @@ def _local_md5sum(resource_name):
 
 def _set_content_type(resource_name):
     '''upload changed file to s3'''
-    if 'css' in resource_name:
+    if '.css' in resource_name:
         contenttype='text/css'
-    elif 'html' in resource_name:
+    elif '.html' in resource_name:
         contenttype='text/html'
-    elif 'jpg' in resource_name:
-        contenttype='image/jpg'
-    elif 'png' in resource_name:
+    elif '.js' in resource_name:
+        contenttype='text/javascript'
+    elif '.jpg' in resource_name:
+        contenttype='image/jpeg'
+    elif '.png' in resource_name:
         contenttype='image/png'
     else:
-        contenttype='text/html'
+        contenttype='text/plain'
     print(contenttype)
     return contenttype
 
