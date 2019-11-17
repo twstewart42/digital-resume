@@ -28,8 +28,24 @@ def _local_md5sum(resource_name):
     md5 = hashlib.md5(open(resource_name, 'rb').read(1024 * 1024)).hexdigest()
     return md5
 
+def _set_content_type(resource_name):
+    '''upload changed file to s3'''
+    if 'css' in resource_name:
+        contenttype='text/css'
+    elif 'html' in resource_name:
+        contenttype='text/html'
+    elif 'jpg' in resource_name:
+        contenttype='image/jpg'
+    elif 'png' in resource_name:
+        contenttype='image/png'
+    else:
+        contenttype='text/html'
+    print(contenttype)
+    return contenttype
+
 def _upload_file(resource_name, bucket_name):
     '''upload changed file to s3'''
+    contenttype = _set_content_type(resource_name)
     body = open(resource_name, 'rb')
     s3_resource = boto3.resource('s3')
     # local file, bucket name, key name
@@ -37,7 +53,7 @@ def _upload_file(resource_name, bucket_name):
         Bucket=bucket_name,
         Key=resource_name,
         Body=body,
-        ContentType='text/html'
+        ContentType=contenttype
     )
 
 def main():
@@ -47,7 +63,7 @@ def main():
     '''
     bucketname = 'twstewart.me'
     directory = '.'
-    exclude = ['.git', '.terraform', 'terraform.tfstate', 'terraform.tfstate.backup']
+    exclude = ['.git', '.terraform', 'terraform.tfstate', 'terraform.tfstate.backup', '.vscode']
     for dirpath, dirnames, files in os.walk(directory):
         for dirn in list(dirnames):
             print(dirn)

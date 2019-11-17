@@ -9,6 +9,7 @@ body,p{
   background-color: #e3e3e3;
 }
   
+
 h1,h2,h3{
   line-height:1.2;
   color: #0089a1;
@@ -78,7 +79,6 @@ code {
   display: table;
   clear: both;
 }
-
 
 /* Create two unequal columns that floats next to each other */
 /* Left column */
