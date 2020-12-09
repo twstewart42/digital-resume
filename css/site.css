@@ -32,6 +32,9 @@ pre {
   white-space: pre-wrap;
 }	
 
+.horizontalgap {
+  padding-left: 25px;
+}
 
 code {
   background-color: beige;
@@ -45,7 +48,6 @@ code {
 .topnav {
   overflow: hidden;
 }
-
 
 .topnav a {
   float: left;
